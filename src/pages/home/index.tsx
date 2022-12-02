@@ -52,13 +52,13 @@ const Home: React.FC = () => {
     };
 
     const handleQuantityDecrease = (index) => {
-        const newItems = [...product];
-        newItems[index].quantidade--;
+        const products = [...product];
+        products[index].quantidade--;
 
-        if (newItems[index].quantidade == 0) {
-            newItems[index].quantidade = 1;
+        if (products[index].quantidade == 0) {
+            products[index].quantidade = 1;
         } else {
-            setProduct(newItems);
+            setProduct(products);
         }
     };
 
@@ -119,39 +119,56 @@ const Home: React.FC = () => {
                                         className="flex items-center  gap-4 p-4"
                                         key={product.id}
                                     >
-                                        <div>
-                                            <div>
-                                                {index + 1} - {product.name} -
-                                                R${" "}
-                                                {product.valor *
-                                                    product.quantidade}
-                                            </div>
-                                            <div>
-                                                quantidade: {product.quantidade}
-                                            </div>
-                                            <div>
-                                                <img
-                                                    src={product.imagem}
-                                                    alt="imagem"
-                                                />
+                                        <div className="flex flex-col items-center gap-4">
+                                            <div className="flex items-center">
+                                                <div className="w-48">
+                                                    <img
+                                                        src={product.imagem}
+                                                        alt="imagem"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-4 p-2">
+                                                    <div>
+                                                        <div>
+                                                            {product.name}
+                                                        </div>
+                                                        <div>
+                                                            Valor: R${" "}
+                                                            {product.valor *
+                                                                product.quantidade}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={() => {
-                                                handleQuantityDecrease(index);
-                                            }}
-                                            className="rounded-full border px-2"
-                                        >
-                                            -
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                handleQuantityIncrease(index);
-                                            }}
-                                            className="rounded-full border px-2"
-                                        >
-                                            +
-                                        </button>
+
+                                        <div>
+                                            <button
+                                                onClick={() => {
+                                                    handleQuantityDecrease(
+                                                        index
+                                                    );
+                                                }}
+                                                className="rounded-full border px-2"
+                                            >
+                                                -
+                                            </button>
+                                        </div>
+
+                                        <div>{product.quantidade}</div>
+                                        <div>
+                                            <button
+                                                onClick={() => {
+                                                    handleQuantityIncrease(
+                                                        index
+                                                    );
+                                                }}
+                                                className="rounded-full border px-2"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+
                                         <button
                                             className="rounded-md border px-4 py-2 duration-150 hover:bg-gray-400"
                                             onClick={() => removeItem(index)}
