@@ -5,12 +5,12 @@ const Home: React.FC = () => {
     const CardsProducts = (props) => {
         return (
             <>
-                <div className="flex gap-4">
-                    <div className="flex w-full flex-col rounded-lg bg-white shadow-lg duration-300">
+                <div className="flex h-[300px] gap-4">
+                    <div className="flex h-full w-full flex-col rounded-lg bg-white shadow-lg duration-300">
                         <div className="h-[70%] w-full">
                             <img
                                 className="h-full rounded-t-lg"
-                                src={props.imagemProduto}
+                                src={props.imagem}
                                 alt="post"
                             />
                         </div>
@@ -25,7 +25,9 @@ const Home: React.FC = () => {
                                             onClick={() =>
                                                 adicionaProdutoNoCarrinho(
                                                     props.nomeProduto,
-                                                    props.valor
+                                                    props.valor,
+                                                    props.quantidade,
+                                                    props.imagem
                                                 )
                                             }
                                             className="rounded-md border bg-gray-200 px-4 py-2 font-semibold hover:bg-red-300"
@@ -42,13 +44,36 @@ const Home: React.FC = () => {
         );
     };
     const [product, setProduct] = useState([]);
-    const [quantity, setQuantity] = useState(1);
 
-    function adicionaProdutoNoCarrinho(name, valor) {
+    const handleQuantityIncrease = (index) => {
+        const newItems = [...product];
+        newItems[index].quantidade++;
+        setProduct(newItems);
+    };
+
+    const handleQuantityDecrease = (index) => {
+        const newItems = [...product];
+        newItems[index].quantidade--;
+
+        if (newItems[index].quantidade == 0) {
+            newItems[index].quantidade = 1;
+        } else {
+            setProduct(newItems);
+        }
+    };
+
+    function adicionaProdutoNoCarrinho(
+        name: string,
+        valor: number,
+        quantidade: number,
+        imagem: string
+    ) {
         const produto = {
             id: "1",
             name: name,
             valor: valor,
+            quantidade: quantidade,
+            imagem: imagem,
         };
 
         setProduct((prevState) => [...prevState, produto]);
@@ -64,25 +89,28 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <div className="flex w-full items-center justify-center gap-4 p-10">
+            <div className="flex w-full  justify-center gap-4 pl-10">
                 <CardsProducts
+                    quantidade={1}
                     valor={25}
-                    imagemProduto="https://media.istockphoto.com/id/1206323282/pt/foto/juicy-hamburger-on-white-background.jpg?s=612x612&w=0&k=20&c=-ItPFjqHgdjhtpgLrOdLCDjLKr0_BR2xItZUVfJ0lUc="
+                    imagem="https://media.istockphoto.com/id/1206323282/pt/foto/juicy-hamburger-on-white-background.jpg?s=612x612&w=0&k=20&c=-ItPFjqHgdjhtpgLrOdLCDjLKr0_BR2xItZUVfJ0lUc="
                     nomeProduto="x-burger"
                 />
                 <CardsProducts
+                    quantidade={1}
                     valor={45}
-                    imagemProduto="https://media.istockphoto.com/id/938742222/pt/foto/cheesy-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=IMbsKsB8sD78lAiCFax9rJAfl9nMvvRurZkrmNIZMQA="
+                    imagem="https://media.istockphoto.com/id/938742222/pt/foto/cheesy-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=IMbsKsB8sD78lAiCFax9rJAfl9nMvvRurZkrmNIZMQA="
                     nomeProduto="pizza"
                 />
                 <CardsProducts
+                    quantidade={1}
                     valor={38}
-                    imagemProduto="https://media.istockphoto.com/id/516816688/pt/foto/caseiras-lenta-cozinheiro-ca%C3%A7arola-com-carne-assada.jpg?s=612x612&w=0&k=20&c=KFibjx4t-LoU3A2oJCR_A4EoC6J1xSTY68If3yZkiVY="
+                    imagem="https://media.istockphoto.com/id/516816688/pt/foto/caseiras-lenta-cozinheiro-ca%C3%A7arola-com-carne-assada.jpg?s=612x612&w=0&k=20&c=KFibjx4t-LoU3A2oJCR_A4EoC6J1xSTY68If3yZkiVY="
                     nomeProduto="carne"
                 />
 
-                <div className="flex h-[300px] w-1/3 items-start bg-gray-600 p-4 font-semibold text-white">
-                    <div className="flex max-h-[90%] w-full flex-col overflow-auto">
+                <div className="ml-auto flex h-screen w-1/3 items-start justify-end overflow-auto bg-gray-600 p-4 font-semibold text-white">
+                    <div className="flex  w-full flex-col overflow-auto">
                         Carrinho
                         {product.map((product, index) => {
                             return (
@@ -94,14 +122,32 @@ const Home: React.FC = () => {
                                         <div>
                                             <div>
                                                 {index + 1} - {product.name} -
-                                                R$ {product.valor * quantity}
+                                                R${" "}
+                                                {product.valor *
+                                                    product.quantidade}
                                             </div>
-                                            <div>quantidade: {quantity}</div>
+                                            <div>
+                                                quantidade: {product.quantidade}
+                                            </div>
+                                            <div>
+                                                <img
+                                                    src={product.imagem}
+                                                    alt="imagem"
+                                                />
+                                            </div>
                                         </div>
                                         <button
-                                            onClick={() =>
-                                                setQuantity(quantity + 1)
-                                            }
+                                            onClick={() => {
+                                                handleQuantityDecrease(index);
+                                            }}
+                                            className="rounded-full border px-2"
+                                        >
+                                            -
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                handleQuantityIncrease(index);
+                                            }}
                                             className="rounded-full border px-2"
                                         >
                                             +
