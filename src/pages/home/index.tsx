@@ -1,7 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+import Toast from "../toast";
 
 const Home: React.FC = () => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/api/hello")
+            .then((response) => response.json())
+            .then((result) => setData(result));
+    }, []);
+
     const CardsProducts = (props) => {
         return (
             <>
@@ -22,14 +34,22 @@ const Home: React.FC = () => {
                                     </div>
                                     <div className="mb-2 text-sm font-medium text-gray-900">
                                         <button
-                                            onClick={() =>
+                                            type="button"
+                                            onClick={() => {
+                                                Swal.fire({
+                                                    position: "center",
+                                                    icon: "success",
+                                                    title: "Adicionado ao carrinho!",
+                                                    showConfirmButton: false,
+                                                    timer: 1500,
+                                                });
                                                 adicionaProdutoNoCarrinho(
                                                     props.nomeProduto,
                                                     props.valor,
                                                     props.quantidade,
                                                     props.imagem
-                                                )
-                                            }
+                                                );
+                                            }}
                                             className="rounded-md border bg-gray-200 px-4 py-2 font-semibold hover:bg-red-300"
                                         >
                                             Adicionar
@@ -43,7 +63,12 @@ const Home: React.FC = () => {
             </>
         );
     };
+
+    console.log(data);
     const [product, setProduct] = useState([]);
+    const notify = () => {
+        toast("xesq");
+    };
 
     const handleQuantityIncrease = (index) => {
         const newItems = [...product];
@@ -90,24 +115,20 @@ const Home: React.FC = () => {
     return (
         <>
             <div className="flex w-full  justify-center gap-4 pl-10">
-                <CardsProducts
-                    quantidade={1}
-                    valor={25}
-                    imagem="https://media.istockphoto.com/id/1206323282/pt/foto/juicy-hamburger-on-white-background.jpg?s=612x612&w=0&k=20&c=-ItPFjqHgdjhtpgLrOdLCDjLKr0_BR2xItZUVfJ0lUc="
-                    nomeProduto="x-burger"
-                />
-                <CardsProducts
-                    quantidade={1}
-                    valor={45}
-                    imagem="https://media.istockphoto.com/id/938742222/pt/foto/cheesy-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=IMbsKsB8sD78lAiCFax9rJAfl9nMvvRurZkrmNIZMQA="
-                    nomeProduto="pizza"
-                />
-                <CardsProducts
-                    quantidade={1}
-                    valor={38}
-                    imagem="https://media.istockphoto.com/id/516816688/pt/foto/caseiras-lenta-cozinheiro-ca%C3%A7arola-com-carne-assada.jpg?s=612x612&w=0&k=20&c=KFibjx4t-LoU3A2oJCR_A4EoC6J1xSTY68If3yZkiVY="
-                    nomeProduto="carne"
-                />
+                {data.map((data) => {
+                    console.log(data.id);
+                    return (
+                        <>
+                            <CardsProducts
+                                key={data.id}
+                                quantidade={data.quantidade}
+                                valor={data.valor}
+                                imagem={data.imagem}
+                                nomeProduto={data.nomeProduto}
+                            />
+                        </>
+                    );
+                })}
 
                 <div className="ml-auto flex h-screen w-1/3 items-start justify-end overflow-auto bg-gray-600 p-4 font-semibold text-white">
                     <div className="flex  w-full flex-col overflow-auto">
