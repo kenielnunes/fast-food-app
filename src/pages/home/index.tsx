@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import ModalInfoLanche from "../../components/ModalInfoLanche";
+import SidebarCarrinho from "../../components/SidebarCarrinho";
 import Sidenav from "../../components/Sidenav/Sidenav";
 import Toast from "../toast";
 
 const Home: React.FC = () => {
     const [data, setData] = useState([]);
-
-    const [count, setCount] = useState(0);
 
     useEffect(() => {
         fetch("http://localhost:3000/api/hello")
@@ -17,52 +17,129 @@ const Home: React.FC = () => {
             .then((result) => setData(result));
     }, []);
 
-    const CardsProducts = ({ imagem, nomeProduto, valor, quantidade }) => {
+    const CardsProducts = ({
+        imagem,
+        nomeProduto,
+        valor,
+        quantidade,
+        description,
+        comentario,
+    }) => {
         return (
             <>
-                <div className="flex h-[300px] gap-4">
-                    <div className="flex h-full w-full flex-col rounded-lg bg-white shadow-lg duration-300">
-                        <div className="h-[70%] w-full">
+                <div className="flex h-full gap-4">
+                    <div className="flex max-h-full w-full flex-col rounded-lg bg-white shadow-lg duration-300">
+                        <div className="h-[60%] w-full">
                             <img
                                 className="h-full w-full rounded-t-lg"
                                 src={imagem}
                                 alt="post"
                             />
                         </div>
-                        <div>
-                            <div className="p-6">
-                                <div className="flex gap-x-3">
-                                    <div className="mb-2 text-sm font-medium text-gray-900">
-                                        {nomeProduto}
+                        <div className="h-[40%]">
+                            <div className="h-full p-6">
+                                <div className="flex h-full flex-col gap-x-3">
+                                    <div className="h-full">
+                                        <div className="mb-2 text-sm font-medium text-gray-900">
+                                            {nomeProduto}
+                                        </div>
+                                        <div className="text-sm">
+                                            {description}
+                                        </div>
                                     </div>
-                                    <div className="mb-2 text-sm font-medium text-gray-900">
-                                        <div className="flex justify-center space-x-2">
-                                            <button
-                                                onClick={() => {
-                                                    setTimeout(() => {
-                                                        Swal.fire({
-                                                            position: "center",
-                                                            icon: "success",
-                                                            title: "Adicionado ao carrinho!",
-                                                            showConfirmButton:
-                                                                false,
-                                                            timer: 1500,
-                                                        });
-                                                    }, 500);
+
+                                    <div className="flex h-full w-full items-center justify-between  text-sm font-medium text-gray-900">
+                                        <div>R$ {valor}</div>
+                                        <div className=" flex h-full items-end justify-end space-x-2">
+                                            <ModalInfoLanche
+                                                id={nomeProduto}
+                                                name={nomeProduto}
+                                                description={description}
+                                                value={valor}
+                                                location={
+                                                    "Rua joão Bento n° 28, Santa Luzia"
+                                                }
+                                                deliveryTime={"15 min"}
+                                                // comment={comentario}
+                                                image={imagem}
+                                                adicionaItemNoCarrinho={() => {
                                                     adicionaProdutoNoCarrinho(
                                                         nomeProduto,
                                                         valor,
                                                         quantidade,
-                                                        imagem
+                                                        imagem,
+                                                        description,
+                                                        comentario
                                                     );
+                                                    setTimeout(() => {
+                                                        const Toast =
+                                                            Swal.mixin({
+                                                                toast: true,
+                                                                position:
+                                                                    "top-end",
+                                                                showConfirmButton:
+                                                                    false,
+                                                                timer: 1500,
+                                                                timerProgressBar:
+                                                                    true,
+                                                                didOpen: (
+                                                                    toast
+                                                                ) => {
+                                                                    toast.addEventListener(
+                                                                        "mouseleave",
+                                                                        Swal.resumeTimer
+                                                                    );
+                                                                },
+                                                            });
+                                                        Toast.fire({
+                                                            icon: "success",
+                                                            title: "Produto adicionado ao carrinho!",
+                                                        });
+                                                    }, 200);
+                                                }}
+                                                comment={""}
+                                            />
+                                            {/* <button
+                                                onClick={() => {
+                                                    // setTimeout(() => {
+                                                    //     const Toast =
+                                                    //         Swal.mixin({
+                                                    //             toast: true,
+                                                    //             position:
+                                                    //                 "top-end",
+                                                    //             showConfirmButton:
+                                                    //                 false,
+                                                    //             timer: 1500,
+                                                    //             timerProgressBar:
+                                                    //                 true,
+                                                    //             didOpen: (
+                                                    //                 toast
+                                                    //             ) => {
+                                                    //                 toast.addEventListener(
+                                                    //                     "mouseleave",
+                                                    //                     Swal.resumeTimer
+                                                    //                 );
+                                                    //             },
+                                                    //         });
+                                                    //     Toast.fire({
+                                                    //         icon: "success",
+                                                    //         title: "Produto adicionado ao carrinho!",
+                                                    //     });
+                                                    // }, 200);
+                                                    // adicionaProdutoNoCarrinho(
+                                                    //     nomeProduto,
+                                                    //     valor,
+                                                    //     quantidade,
+                                                    //     imagem
+                                                    // );
                                                 }}
                                                 type="button"
                                                 data-mdb-ripple="true"
                                                 data-mdb-ripple-color="light"
-                                                className="inline-block rounded-full bg-blue-600 px-4 py-2 text-2xl font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
+                                                className="inline-block rounded-full bg-blue-600 px-4 py-2 text-sm font-medium  leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg "
                                             >
-                                                +
-                                            </button>
+                                                Adicionar
+                                            </button> */}
                                         </div>
                                     </div>
                                 </div>
@@ -87,6 +164,8 @@ const Home: React.FC = () => {
                                     valor={data.valor}
                                     imagem={data.imagem}
                                     nomeProduto={data.nomeProduto}
+                                    description={data.description}
+                                    comentario={data.comentario}
                                 />
                             </>
                         );
@@ -198,7 +277,9 @@ const Home: React.FC = () => {
         name: string,
         valor: number,
         quantidade: number,
-        imagem: string
+        imagem: string,
+        descricao: string,
+        comentario: string
     ) {
         const produto = {
             id: "1",
@@ -206,6 +287,8 @@ const Home: React.FC = () => {
             valor: valor,
             quantidade: quantidade,
             imagem: imagem,
+            descricao: descricao,
+            comentario: comentario,
         };
 
         setProduct((prevState) => [...prevState, produto]);
@@ -216,10 +299,18 @@ const Home: React.FC = () => {
         item.splice(index, 1);
         setProduct(item);
     }
+    let somaValores = product.reduce(function (accumulator, object) {
+        return accumulator + object.valor;
+    }, 0);
 
     return (
-        <div className="flex">
-            <Sidenav value={product.length} />
+        <div className="flex flex-col">
+            {/* <SidebarCarrinho /> */}
+            <Sidenav
+                dataProducts={product}
+                valorAcumuladoCarrinho={somaValores}
+                totalItems={product.length}
+            />
             <Carrinho />
         </div>
     );
