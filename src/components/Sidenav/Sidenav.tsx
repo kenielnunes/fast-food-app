@@ -17,6 +17,7 @@ type CountItems = {
     valorAcumuladoCarrinho: number;
     totalItems: number;
     dataProducts: any;
+    children: React.ReactNode;
 };
 
 type Products = {
@@ -35,6 +36,7 @@ export default function Navbar({
     valorAcumuladoCarrinho,
     totalItems,
     dataProducts,
+    children,
 }: CountItems) {
     const [showSidebar, setShowSidebar] = useState(false);
     const handleQuantityIncrease = (index) => {
@@ -182,50 +184,7 @@ export default function Navbar({
                                         }`}
                                     >
                                         <h3 className="mt-20 text-3xl font-semibold text-white">
-                                            <div>
-                                                {dataProducts.length <= 0
-                                                    ? "Carrinho vazio"
-                                                    : dataProducts.map(
-                                                          (product) => {
-                                                              return (
-                                                                  <Menu.Item>
-                                                                      {({
-                                                                          active,
-                                                                      }) => (
-                                                                          <div
-                                                                              className={classNames(
-                                                                                  active
-                                                                                      ? "bg-gray-100"
-                                                                                      : "",
-                                                                                  "block px-4 py-2 text-sm text-gray-700"
-                                                                              )}
-                                                                          >
-                                                                              <div className="flex justify-between p-4">
-                                                                                  <div>
-                                                                                      {
-                                                                                          product.name
-                                                                                      }
-                                                                                  </div>
-                                                                                  <div>
-                                                                                      R${" "}
-                                                                                      {
-                                                                                          product.valor
-                                                                                      }
-                                                                                  </div>
-                                                                                  <div>
-                                                                                      R${" "}
-                                                                                      {
-                                                                                          product.descricao
-                                                                                      }
-                                                                                  </div>
-                                                                              </div>
-                                                                          </div>
-                                                                      )}
-                                                                  </Menu.Item>
-                                                              );
-                                                          }
-                                                      )}
-                                            </div>
+                                            <div>{children}</div>
                                         </h3>
                                     </div>
                                     {/* <div>

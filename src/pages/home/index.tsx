@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Menu } from "@headlessui/react";
 import React, { createContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,6 +7,7 @@ import Swal from "sweetalert2";
 import ModalInfoLanche from "../../components/ModalInfoLanche";
 import SidebarCarrinho from "../../components/SidebarCarrinho";
 import Sidenav from "../../components/Sidenav/Sidenav";
+import FastFoodCard from "../card";
 import Toast from "../toast";
 
 const Home: React.FC = () => {
@@ -154,102 +156,22 @@ const Home: React.FC = () => {
     const Carrinho = () => {
         return (
             <div className="flex w-full justify-center">
-                <div className="grid h-[300px] w-2/3 grid-cols-3 gap-6 px-6 py-6">
+                <div className="grid  w-2/3 grid-cols-3 gap-6 px-6 py-6">
                     {data.map((data) => {
                         return (
                             <>
-                                <CardsProducts
+                                <FastFoodCard
                                     key={data.id}
-                                    quantidade={data.quantidade}
-                                    valor={data.valor}
-                                    imagem={data.imagem}
-                                    nomeProduto={data.nomeProduto}
-                                    description={data.description}
-                                    comentario={data.comentario}
+                                    image={data.imagem}
+                                    ingredients={data.description}
+                                    price={data.valor}
+                                    nome={data.nomeProduto}
                                 />
                             </>
                         );
                     })}
                 </div>
-
-                {/* <div className="ml-auto flex h-screen w-1/3 items-start justify-end overflow-auto bg-gray-600 p-4 font-semibold text-white">
-                    <div className="flex  w-full flex-col overflow-auto">
-                        <div>Carrinho</div>
-                        {product.length == 0
-                            ? "vazio"
-                            : product.map((product, index) => {
-                                  return (
-                                      <>
-                                          <div
-                                              className="flex items-center  gap-4 p-4"
-                                              key={product.id}
-                                          >
-                                              <div className="flex flex-col items-center gap-4">
-                                                  <div className="flex items-center">
-                                                      <div className="w-48">
-                                                          <img
-                                                              src={
-                                                                  product.imagem
-                                                              }
-                                                              alt="imagem"
-                                                          />
-                                                      </div>
-                                                      <div className="flex flex-col gap-4 p-2">
-                                                          <div>
-                                                              <div>
-                                                                  {product.name}
-                                                              </div>
-                                                              <div>
-                                                                  Valor: R${" "}
-                                                                  {product.valor *
-                                                                      product.quantidade}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-
-                                              <div>
-                                                  <button
-                                                      onClick={() => {
-                                                          handleQuantityDecrease(
-                                                              index
-                                                          );
-                                                      }}
-                                                      className="rounded-full border px-2"
-                                                  >
-                                                      -
-                                                  </button>
-                                              </div>
-
-                                              <div>{product.quantidade}</div>
-                                              <div>
-                                                  <button
-                                                      onClick={() => {
-                                                          handleQuantityIncrease(
-                                                              index
-                                                          );
-                                                      }}
-                                                      className="rounded-full border px-2"
-                                                  >
-                                                      +
-                                                  </button>
-                                              </div>
-
-                                              <button
-                                                  className="rounded-md border px-4 py-2 duration-150 hover:bg-gray-400"
-                                                  onClick={() =>
-                                                      removeItem(index)
-                                                  }
-                                              >
-                                                  Excluir
-                                              </button>
-                                          </div>
-                                      </>
-                                  );
-                              })}
-                    </div>
-                </div> */}
+                Y{" "}
             </div>
         );
     };
@@ -310,7 +232,73 @@ const Home: React.FC = () => {
                 dataProducts={product}
                 valorAcumuladoCarrinho={somaValores}
                 totalItems={product.length}
-            />
+            >
+                {product.length <= 0
+                    ? "Carrinho vazio"
+                    : product.map((product, index) => {
+                          return (
+                              <Menu.Item>
+                                  {({ active }) => (
+                                      <div
+                                          className="flex items-center  gap-4 p-4"
+                                          key={product.id}
+                                      >
+                                          <div className="flex flex-col items-center gap-4">
+                                              <div className="flex items-center">
+                                                  <div className="flex flex-col gap-4 p-2">
+                                                      <div>
+                                                          <div>
+                                                              {product.name}
+                                                          </div>
+                                                          <div>
+                                                              Valor: R${" "}
+                                                              {product.valor *
+                                                                  product.quantidade}
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <div>
+                                              <button
+                                                  onClick={() => {
+                                                      handleQuantityDecrease(
+                                                          index
+                                                      );
+                                                  }}
+                                                  className="rounded-full border px-2"
+                                              >
+                                                  -
+                                              </button>
+                                          </div>
+
+                                          <div>{product.quantidade}</div>
+                                          <div>
+                                              <button
+                                                  onClick={() => {
+                                                      handleQuantityIncrease(
+                                                          index
+                                                      );
+                                                  }}
+                                                  className="rounded-full border px-2"
+                                              >
+                                                  +
+                                              </button>
+                                          </div>
+
+                                          <button
+                                              className="rounded-md border px-4 py-2 duration-150 hover:bg-gray-400"
+                                              onClick={() => removeItem(index)}
+                                          >
+                                              Excluir
+                                          </button>
+                                      </div>
+                                  )}
+                              </Menu.Item>
+                          );
+                      })}
+            </Sidenav>
             <Carrinho />
         </div>
     );
