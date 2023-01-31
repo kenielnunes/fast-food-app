@@ -35,34 +35,9 @@ function classNames(...classes) {
 export default function Navbar({
     valorAcumuladoCarrinho,
     totalItems,
-    dataProducts,
     children,
 }: CountItems) {
     const [showSidebar, setShowSidebar] = useState(false);
-    const handleQuantityIncrease = (index) => {
-        const newItems = [...dataProducts];
-        newItems[index].quantidade++;
-        dataProducts.push(newItems);
-    };
-
-    console.log(dataProducts);
-
-    function removeItem(index) {
-        const item = dataProducts.slice();
-        item.splice(index, 1);
-        dataProducts.push(item);
-    }
-
-    const handleQuantityDecrease = (index) => {
-        const products = [...dataProducts];
-        products[index].quantidade--;
-
-        if (products[index].quantidade == 0) {
-            products[index].quantidade = 1;
-        } else {
-            dataProducts.push(products);
-        }
-    };
 
     const Carrinho = () => {
         return (
@@ -177,13 +152,13 @@ export default function Navbar({
                                         </button>
                                     )}
                                     <div
-                                        className={`fixed top-0 right-0 z-40  h-full w-[25vw] bg-blue-600 p-10 pl-20 text-white  duration-300 ease-in-out ${
+                                        className={`fixed top-0 right-0 z-40  h-full w-[25vw] bg-blue-600 pl-6 text-white  duration-300 ease-in-out ${
                                             showSidebar
                                                 ? "translate-x-0 "
                                                 : "translate-x-full"
                                         }`}
                                     >
-                                        <h3 className="mt-20 text-3xl font-semibold text-white">
+                                        <h3 className="mt-20 text-lg font-semibold text-white">
                                             <div>{children}</div>
                                         </h3>
                                     </div>
